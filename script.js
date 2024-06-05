@@ -14,9 +14,6 @@ function divide(left, right) {
     return left / right
 }
 
-let left = 0
-let right = 0
-let operation = ""
 function operate(left, right, operation) {
     if (operation === "add") {
         return add(left, right)
@@ -29,5 +26,7 @@ function operate(left, right, operation) {
     } else {
         return "Operation Does Not Exist"
     }
-
 }
+let left = 0
+let right = 0
+let operation = ""
