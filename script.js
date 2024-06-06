@@ -9,6 +9,10 @@ const buttons = document.querySelectorAll("button")
 buttons.forEach(button => {
     button.addEventListener("click", event => {
         const curr_button = event.currentTarget
+
+        // when size is too big show only first 10 digits
+
+
         if (curr_button.classList.contains("clear")) {
             display.textContent = "0000000000"
             left = ""
@@ -23,8 +27,10 @@ buttons.forEach(button => {
                 }
                 left += curr_button.textContent
             } else if (curr_button.classList.contains("operation")) {
-                display.textContent += curr_button.textContent
-                operation = curr_button.textContent
+                if (left){
+                    display.textContent += curr_button.textContent
+                    operation = curr_button.textContent
+                }
             }
         } else {
             if (curr_button.classList.contains("number")) {
@@ -40,7 +46,6 @@ buttons.forEach(button => {
                     operation = curr_button.textContent
                     display.textContent += operation
                 }
-
             }
         }
     })
