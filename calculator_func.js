@@ -15,6 +15,7 @@ return left / right
 }
 
 export default function operate(left, right, operation) {
+    console.log(left, right, operation)
     if (operation === "+") {
         return add(left, right)
     } else if (operation === "-") {

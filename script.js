@@ -1,9 +1,8 @@
-import ListNode, {debugListNode} from "./linked_list_node.js"
 import operate from "./calculator_func.js"
 
-let operation = false // if operation was ever pressed
-const head = new ListNode()
-let curr_digit = head
+let operation = "" // if operation was ever pressed
+let left = ""
+let right = ""
 
 const display = document.querySelector(".display")
 const buttons = document.querySelectorAll("button")
@@ -12,34 +11,36 @@ buttons.forEach(button => {
         const curr_button = event.currentTarget
         if (curr_button.classList.contains("clear")) {
             display.textContent = "0000000000"
-            debugListNode(head.next)
-            head.next = null
-            curr_digit = head
-        } else if (!head.next) {
+            left = ""
+            right = ""
+            operation = ""
+        } else if (!operation) {
             if (curr_button.classList.contains("number")) {
-                display.textContent = curr_button.textContent
-                curr_digit.next = new ListNode(curr_button.textContent, "number")
-                curr_digit = curr_digit.next
+                if (!left){
+                    display.textContent = curr_button.textContent
+                } else {
+                    display.textContent += curr_button.textContent
+                }
+                left += curr_button.textContent
+            } else if (curr_button.classList.contains("operation")) {
+                display.textContent += curr_button.textContent
+                operation = curr_button.textContent
             }
         } else {
             if (curr_button.classList.contains("number")) {
                 display.textContent += curr_button.textContent
-                curr_digit.next = new ListNode(curr_button.textContent, "number")
-                curr_digit = curr_digit.next
+                right += curr_button.textContent
             }
             if (curr_button.classList.contains("operation")) {
-                if (operation) {
-                    if (curr_digit.type === "number") {
-                        // submit for operation
-                        // if not "=" then store operation such that after calculating display "result op" and append any input to end
-                        // operation to false
-                    }
+                left = display.textContent = operate(parseInt(left), parseInt(right), operation)
+                right = ""
+                if (curr_button.textContent === "="){
+                    operation = ""
                 } else {
-                    display.textContent += curr_button.textContent
-                    curr_digit.next = new ListNode(curr_button.textContent, "operation")
-                    curr_digit = curr_digit.next
-                    operation = true
+                    operation = curr_button.textContent
+                    display.textContent += operation
                 }
+
             }
         }
     })
