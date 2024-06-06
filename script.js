@@ -1,32 +1,45 @@
-function add(left, right) {
-    return left + right
-}
+import ListNode from "./linked_list_node"
+import operate from "./calculator_func"
 
-function subtract(left, right) {
-    return left - right
-}
+let operation = false
+const head = new ListNode()
+let curr_digit = head
 
-function multiply(left, right) {
-    return left * right
-}
-
-function divide(left, right) {
-    return left / right
-}
-
-function operate(left, right, operation) {
-    if (operation === "add") {
-        return add(left, right)
-    } else if (operation === "subtract") {
-        return subtract(left, right)
-    } else if (operation === "multiply") {
-        return multiply(left, right)
-    } else if (operation === "divide") {
-        return divide(left, right)
-    } else {
-        return "Operation Does Not Exist"
-    }
-}
-let left = 0
-let right = 0
-let operation = ""
+const display = document.querySelector(".display")
+let is_display_empty = true
+const buttons = document.querySelectorAll("button")
+buttons.forEach(button => {
+    button.addEventListener("click", event => {
+        if (event.currentTarget.classList.contains("clear")) {
+            display.textContent = "0000000000"
+            is_display_empty = true
+        } else if (is_display_empty) {
+            if (event.currentTarget.classList.contains("number")) {
+                display.textContent = event.currentTarget.textContent
+                is_display_empty = false
+                curr_digit.next = new ListNode(event.currentTarget.textContent)
+                curr_digit = curr_digit.next
+            }
+        } else {
+            if (event.currentTarget.classList.contains("number")) {
+                display.textContent += event.currentTarget.textContent
+                curr_digit.next = new ListNode(event.currentTarget.textContent)
+                curr_digit = curr_digit.next
+            }
+            if (event.currentTarget.classList.contains("operation")) {
+                if (operation) {
+                    if (curr_digit.type === "number") {
+                        // submit for operation
+                        // if not "=" then store operation such that after calculating display "result op" and append any input to end
+                        // operation to false
+                    }
+                } else {
+                    display.textContent += event.currentTarget.textContent
+                    curr_digit.next = new ListNode((event.currentTarget.textContent))
+                    curr_digit = curr_digit.next
+                    operation = true
+                }
+            }
+        }
+    })
+})
