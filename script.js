@@ -5,46 +5,74 @@ let left = ""
 let right = ""
 
 const display = document.querySelector(".display")
-const buttons = document.querySelectorAll("button")
-buttons.forEach(button => {
-    button.addEventListener("click", event => {
-        const curr_button = event.currentTarget
+function updateDisplay(){
+    if (right) {
+        display.textContent = right.slice(-10)
+    } else {
+        display.textContent = left.slice(-10)
+    }
+}
 
-        // when size is too big show only first 10 digits
+function removeActive(curr_button=null) {
+    operation_buttons.forEach(operation_button => {
+        operation_button.classList.remove("active")
+    })
+    curr_button.classList?.add("active")
+}
 
+function resultToSigFig(number){
+    if (number.toString().length <= 10){
+        updateDisplay()
+        return
+    }
+    let MAX_LENGTH = 10
+    let exponentLength = Math.floor(Math.log10(Math.abs(number))).toString().length;
+    let precision = MAX_LENGTH - 5 - exponentLength;  // Adjust 5 for "e+XX" and the decimal point
 
-        if (curr_button.classList.contains("clear")) {
-            display.textContent = "0000000000"
-            left = ""
-            right = ""
-            operation = ""
-        } else if (!operation) {
-            if (curr_button.classList.contains("number")) {
-                if (!left){
-                    display.textContent = curr_button.textContent
-                } else {
-                    display.textContent += curr_button.textContent
-                }
-                left += curr_button.textContent
-            } else if (curr_button.classList.contains("operation")) {
-                if (left){
-                    display.textContent += curr_button.textContent
-                    operation = curr_button.textContent
-                }
-            }
+    if (precision < 0) precision = 0;  // Ensure precision is not negative
+
+    display.textContent = number.toExponential(precision);
+}
+
+const clear_button = document.querySelector(".clear")
+clear_button.addEventListener("click", event=> {
+    display.textContent = "0000000000"
+    left = ""
+    right = ""
+    operation = ""
+    removeActive()
+})
+
+const number_buttons = document.querySelectorAll(".number")
+number_buttons.forEach(number_button => {
+    number_button.addEventListener("click", event => {
+        if (!operation) {
+            left += event.currentTarget.textContent
         } else {
-            if (curr_button.classList.contains("number")) {
-                display.textContent += curr_button.textContent
-                right += curr_button.textContent
-            }
-            if (curr_button.classList.contains("operation")) {
-                left = display.textContent = operate(parseInt(left), parseInt(right), operation)
+            right += event.currentTarget.textContent
+        }
+        updateDisplay()
+    })
+})
+
+const operation_buttons = document.querySelectorAll(".operation")
+operation_buttons.forEach(operation_button => {
+    operation_button.addEventListener("click", event => {
+        if (left){
+            if (!operation && event.currentTarget.textContent !== "=") {
+                operation = event.currentTarget.textContent
+                removeActive(event.currentTarget)
+            } else if (right) {
+                let result = 0
+                result = operate(parseInt(left), parseInt(right), operation)
+                left = result.toString()
                 right = ""
-                if (curr_button.textContent === "="){
+                resultToSigFig(result)
+                removeActive(event.currentTarget)
+                if (event.currentTarget.textContent === "="){
                     operation = ""
                 } else {
-                    operation = curr_button.textContent
-                    display.textContent += operation
+                    operation = event.currentTarget.textContent
                 }
             }
         }

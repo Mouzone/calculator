@@ -1,0 +1,39 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+.calculator {
+    margin-top: 100px;
+    border: 1px black solid;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.display {
+    border: 1px black solid;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    display: flex;
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.numbers {
+    display: flex;
+    flex-wrap: wrap;
+    width: 77px;
+}
+
+.operations {
+    display: flex;
+    flex-direction: column;
+}
+
+.active {
+    border: 1px red solid;
+}
