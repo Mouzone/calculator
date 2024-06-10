@@ -143,3 +143,16 @@ equal_button.addEventListener("click", event => {
         updateDisplay()
     }
 })
+
+// Minus, ShiftRight Equal, Equal, ShiftRight Digit8, Slash
+document.addEventListener("keydown", event => {
+    const keyValue = event.key
+    console.log(keyValue)
+    let button = document.querySelector(`button[value="${keyValue}"]`);
+    if (keyValue === "Enter") {
+        button = document.querySelector(`button[value="="]`);
+    }
+    if (button) {
+        button.click();
+    }
+})
