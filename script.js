@@ -34,18 +34,11 @@ function resultToSigFig(number){
     display.textContent = number.toExponential(precision);
 }
 
-const clear_button = document.querySelector(".clear")
-clear_button.addEventListener("click", event=> {
-    display.textContent = "0000000000"
-    left = ""
-    right = ""
-    operation = ""
-    removeActive()
-})
-
 const number_buttons = document.querySelectorAll(".number")
+const equal_button = document.querySelector("#equal")
 number_buttons.forEach(number_button => {
     number_button.addEventListener("click", event => {
+        equal_button.classList.remove("active")
         if (!operation) {
             if (left === "0"){
                 left = ""
@@ -88,6 +81,7 @@ operation_buttons.forEach(operation_button => {
                     } else {
                         operation = event.currentTarget.textContent
                     }
+                    equal_button.classList.remove("active")
                 }
             }
         }
@@ -109,3 +103,39 @@ decimal_button.addEventListener("click", event => {
     }
     updateDisplay()
 })
+
+const clear_button = document.querySelector(".clear")
+clear_button.addEventListener('mousedown', function(event) {
+    let holdTimeout = setTimeout(function() {
+        // Actions to perform in the hold state
+        display.textContent = "0000000000"
+        right = ""
+        left = ""
+        operation = ""
+        removeActive()
+        // Add your hold state actions here
+    }, 500);
+
+    function cancelHold() {
+        clearTimeout(holdTimeout);
+        document.removeEventListener('mouseup', cancelHold);
+        document.removeEventListener('mouseleave', cancelHold);
+
+        console.log("here")
+        if (right) {
+            right = right.slice(0, -1)
+        } else if (operation) {
+            operation = ""
+            removeActive()
+        } else {
+            left = left.slice(0,-1)
+        }
+        updateDisplay()
+        if (!left) {
+            display.textContent = "0000000000"
+        }
+    }
+
+    document.addEventListener('mouseup', cancelHold);
+    document.addEventListener('mouseleave', cancelHold);
+});

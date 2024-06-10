@@ -21,12 +21,13 @@ body {
     display: flex;
     min-width: 20px;
     min-height: 20px;
+    gap: 20px;
 }
 
 .numbers {
     display: flex;
     flex-wrap: wrap;
-    width: 77px;
+    width: 150px;
 }
 
 .operations {
@@ -36,4 +37,11 @@ body {
 
 .active {
     border: 1px red solid;
+}
+
+button {
+    padding: 5px;
+    text-align: center;
+    min-width: 50px;
+    min-height: 50px;
 }
