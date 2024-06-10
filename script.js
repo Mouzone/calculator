@@ -17,7 +17,7 @@ function removeActive(curr_button=null) {
     operation_buttons.forEach(operation_button => {
         operation_button.classList.remove("active")
     })
-    curr_button.classList?.add("active")
+    curr_button?.classList?.add("active")
 }
 
 function resultToSigFig(number){
@@ -46,14 +46,18 @@ clear_button.addEventListener("click", event=> {
 const number_buttons = document.querySelectorAll(".number")
 number_buttons.forEach(number_button => {
     number_button.addEventListener("click", event => {
-        if (event.currentTarget.textContent !== "0") {
-            if (!operation) {
-                left += event.currentTarget.textContent
-            } else {
-                right += event.currentTarget.textContent
+        if (!operation) {
+            if (left === "0"){
+                left = ""
             }
-            updateDisplay()
+            left += event.currentTarget.textContent
+        } else {
+            if (right === "0"){
+                right = ""
+            }
+            right += event.currentTarget.textContent
         }
+        updateDisplay()
     })
 })
 
@@ -65,16 +69,25 @@ operation_buttons.forEach(operation_button => {
                 operation = event.currentTarget.textContent
                 removeActive(event.currentTarget)
             } else if (right) {
-                let result = 0
-                result = operate(parseInt(left), parseInt(right), operation)
-                left = result.toString()
-                right = ""
-                resultToSigFig(result)
-                removeActive(event.currentTarget)
-                if (event.currentTarget.textContent === "="){
+                if (operation === "/" && parseFloat(right) === 0) {
+                    console.log("here")
+                    display.textContent = "ERROR"
+                    left = ""
+                    right = ""
                     operation = ""
+                    removeActive()
                 } else {
-                    operation = event.currentTarget.textContent
+                    let result = 0
+                    result = operate(parseFloat(left), parseFloat(right), operation)
+                    left = result.toString()
+                    right = ""
+                    resultToSigFig(result)
+                    removeActive(event.currentTarget)
+                    if (event.currentTarget.textContent === "="){
+                        operation = ""
+                    } else {
+                        operation = event.currentTarget.textContent
+                    }
                 }
             }
         }
@@ -84,11 +97,15 @@ operation_buttons.forEach(operation_button => {
 const decimal_button = document.querySelector(".decimal")
 decimal_button.addEventListener("click", event => {
     if (!operation) {
-        if (!left.includes(".")) {
-
-        }
         if (!left) {
-            left += "0."
+            left += "0"
         }
+        left += "."
+    } else {
+        if (!right) {
+            right += "0"
+        }
+        right += "."
     }
+    updateDisplay()
 })
