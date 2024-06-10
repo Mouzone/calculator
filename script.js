@@ -46,12 +46,14 @@ clear_button.addEventListener("click", event=> {
 const number_buttons = document.querySelectorAll(".number")
 number_buttons.forEach(number_button => {
     number_button.addEventListener("click", event => {
-        if (!operation) {
-            left += event.currentTarget.textContent
-        } else {
-            right += event.currentTarget.textContent
+        if (event.currentTarget.textContent !== "0") {
+            if (!operation) {
+                left += event.currentTarget.textContent
+            } else {
+                right += event.currentTarget.textContent
+            }
+            updateDisplay()
         }
-        updateDisplay()
     })
 })
 
@@ -77,4 +79,16 @@ operation_buttons.forEach(operation_button => {
             }
         }
     })
+})
+
+const decimal_button = document.querySelector(".decimal")
+decimal_button.addEventListener("click", event => {
+    if (!operation) {
+        if (!left.includes(".")) {
+
+        }
+        if (!left) {
+            left += "0."
+        }
+    }
 })
