@@ -35,10 +35,8 @@ function resultToSigFig(number){
 }
 
 const number_buttons = document.querySelectorAll(".number")
-const equal_button = document.querySelector("#equal")
 number_buttons.forEach(number_button => {
     number_button.addEventListener("click", event => {
-        equal_button.classList.remove("active")
         if (!operation) {
             if (left === "0"){
                 left = ""
@@ -58,7 +56,7 @@ const operation_buttons = document.querySelectorAll(".operation")
 operation_buttons.forEach(operation_button => {
     operation_button.addEventListener("click", event => {
         if (left){
-            if (!operation && event.currentTarget.textContent !== "=") {
+            if (!operation) {
                 operation = event.currentTarget.textContent
                 removeActive(event.currentTarget)
             } else if (right) {
@@ -76,19 +74,14 @@ operation_buttons.forEach(operation_button => {
                     right = ""
                     resultToSigFig(result)
                     removeActive(event.currentTarget)
-                    if (event.currentTarget.textContent === "="){
-                        operation = ""
-                    } else {
-                        operation = event.currentTarget.textContent
-                    }
-                    equal_button.classList.remove("active")
+                    operation = event.currentTarget.textContent
                 }
             }
         }
     })
 })
 
-const decimal_button = document.querySelector(".decimal")
+const decimal_button = document.querySelector("#decimal")
 decimal_button.addEventListener("click", event => {
     if (!operation) {
         if (!left) {
@@ -104,7 +97,7 @@ decimal_button.addEventListener("click", event => {
     updateDisplay()
 })
 
-const clear_button = document.querySelector(".clear")
+const clear_button = document.querySelector("#clear")
 clear_button.addEventListener('mousedown', function(event) {
     let holdTimeout = setTimeout(function() {
         // Actions to perform in the hold state
@@ -139,3 +132,14 @@ clear_button.addEventListener('mousedown', function(event) {
     document.addEventListener('mouseup', cancelHold);
     document.addEventListener('mouseleave', cancelHold);
 });
+
+const equal_button = document.querySelector("#equal")
+equal_button.addEventListener("click", event => {
+    if (left && right && operation) {
+        console.log(left)
+        left = operate(parseFloat(left), parseFloat(right), operation).toString()
+        right = ""
+        operation = ""
+        updateDisplay()
+    }
+})
