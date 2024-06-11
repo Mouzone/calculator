@@ -38,14 +38,8 @@ const number_buttons = document.querySelectorAll(".number")
 number_buttons.forEach(number_button => {
     number_button.addEventListener("click", event => {
         if (!operation) {
-            if (left === "0"){
-                left = ""
-            }
             left += event.currentTarget.textContent
         } else {
-            if (right === "0"){
-                right = ""
-            }
             right += event.currentTarget.textContent
         }
         updateDisplay()
@@ -61,15 +55,13 @@ operation_buttons.forEach(operation_button => {
                 removeActive(event.currentTarget)
             } else if (right) {
                 if (operation === "/" && parseFloat(right) === 0) {
-                    console.log("here")
                     display.textContent = "ERROR"
                     left = ""
                     right = ""
                     operation = ""
                     removeActive()
                 } else {
-                    let result = 0
-                    result = operate(parseFloat(left), parseFloat(right), operation)
+                    let result = operate(parseFloat(left), parseFloat(right), operation)
                     left = result.toString()
                     right = ""
                     resultToSigFig(result)
@@ -84,15 +76,19 @@ operation_buttons.forEach(operation_button => {
 const decimal_button = document.querySelector("#decimal")
 decimal_button.addEventListener("click", event => {
     if (!operation) {
-        if (!left) {
-            left += "0"
+        if (!left.includes(".")){
+            if (!left) {
+                left += "0"
+            }
+            left += "."
         }
-        left += "."
     } else {
-        if (!right) {
-            right += "0"
+        if (!right.includes(".")){
+            if (!right) {
+                right += "0"
+            }
+            right += "."
         }
-        right += "."
     }
     updateDisplay()
 })
@@ -114,7 +110,6 @@ clear_button.addEventListener('mousedown', function(event) {
         document.removeEventListener('mouseup', cancelHold);
         document.removeEventListener('mouseleave', cancelHold);
 
-        console.log("here")
         if (right) {
             right = right.slice(0, -1)
         } else if (operation) {
@@ -136,18 +131,25 @@ clear_button.addEventListener('mousedown', function(event) {
 const equal_button = document.querySelector("#equal")
 equal_button.addEventListener("click", event => {
     if (left && right && operation) {
-        console.log(left)
-        left = operate(parseFloat(left), parseFloat(right), operation).toString()
-        right = ""
-        operation = ""
-        updateDisplay()
+        if (operation === "/" && parseFloat(right) === 0) {
+            display.textContent = "ERROR"
+            left = ""
+            right = ""
+            operation = ""
+            removeActive()
+        } else {
+            let result = operate(parseFloat(left), parseFloat(right), operation)
+            left = result.toString()
+            right = ""
+            operation = ""
+            resultToSigFig(result)
+        }
     }
 })
 
-// Minus, ShiftRight Equal, Equal, ShiftRight Digit8, Slash
+// make backspace work since clear button is specifically for mousebutton down, maybe button has a . method and we mirror or just wirte  a new method
 document.addEventListener("keydown", event => {
     const keyValue = event.key
-    console.log(keyValue)
     let button = document.querySelector(`button[value="${keyValue}"]`);
     if (keyValue === "Enter") {
         button = document.querySelector(`button[value="="]`);
