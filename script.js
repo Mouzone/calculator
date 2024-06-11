@@ -90,40 +90,68 @@ decimal_button.addEventListener("click", event => {
     updateDisplay()
 })
 
-const clear_button = document.querySelector("#clear")
-clear_button.addEventListener('mousedown', function(event) {
-    let holdTimeout = setTimeout(function() {
-        // Actions to perform in the hold state
-        display.textContent = "0000000000"
-        right = ""
-        left = ""
-        operation = ""
-        removeActive()
-        // Add your hold state actions here
-    }, 500);
+const clear_button = document.querySelector("#clear");
+let holdTimeout;
 
-    function cancelHold() {
-        clearTimeout(holdTimeout);
-        document.removeEventListener('mouseup', cancelHold);
-        document.removeEventListener('mouseleave', cancelHold);
+// Function to handle hold actions
+function handleHoldActions() {
+    display.textContent = "0000000000";
+    right = "";
+    left = "";
+    operation = "";
+    removeActive();
+    // Add your hold state actions here
+}
 
-        if (right) {
-            right = right.slice(0, -1)
-        } else if (operation) {
-            operation = ""
-            removeActive()
-        } else {
-            left = left.slice(0,-1)
-        }
-        updateDisplay()
-        if (!left) {
-            display.textContent = "0000000000"
-        }
+// Function to cancel hold actions
+function cancelHold() {
+    clearTimeout(holdTimeout);
+    document.removeEventListener('mouseup', cancelHold);
+    document.removeEventListener('mouseleave', cancelHold);
+    document.removeEventListener('keyup', handleKeyUp);
+
+    if (right) {
+        right = right.slice(0, -1);
+    } else if (operation) {
+        operation = "";
+        removeActive();
+    } else {
+        left = left.slice(0, -1);
     }
+    updateDisplay();
+    if (!left) {
+        display.textContent = "0000000000";
+    }
+}
+
+// Function to handle mousedown event
+function handleMouseDown(event) {
+    holdTimeout = setTimeout(handleHoldActions, 500);
 
     document.addEventListener('mouseup', cancelHold);
     document.addEventListener('mouseleave', cancelHold);
-});
+}
+
+// Function to handle keydown event
+function handleKeyDown(event) {
+    if (event.key === 'Backspace') {
+        holdTimeout = setTimeout(handleHoldActions, 500);
+
+        document.addEventListener('keyup', handleKeyUp);
+    }
+}
+
+// Function to handle keyup event
+function handleKeyUp(event) {
+    if (event.key === 'Backspace') {
+        cancelHold();
+    }
+}
+
+// Add event listeners
+clear_button.addEventListener('mousedown', handleMouseDown);
+document.addEventListener('keydown', handleKeyDown);
+
 
 const equal_button = document.querySelector("#equal")
 equal_button.addEventListener("click", event => {
@@ -144,7 +172,6 @@ equal_button.addEventListener("click", event => {
     }
 })
 
-// make backspace work since clear button is specifically for mousebutton down, maybe button has a . method and we mirror or just wirte  a new method
 document.addEventListener("keydown", event => {
     const keyValue = event.key
     let button = document.querySelector(`button[value="${keyValue}"]`);
