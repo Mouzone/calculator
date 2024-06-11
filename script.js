@@ -21,14 +21,17 @@ function removeActive(curr_button=null) {
 }
 
 function resultToSigFig(number){
-    let precision = 4
-    if (number.toString().length > 10){
-        while (number.toExponential(precision).toString().length > 10) {
-            precision += 1
-        }
-        number = number.toExponential(precision)
+    if (number.toString().length <= 10){
+        updateDisplay()
+        return
     }
-    display.textContent = number
+    let MAX_LENGTH = 10
+    let exponentLength = Math.floor(Math.log10(Math.abs(number))).toString().length;
+    let precision = MAX_LENGTH - 5 - exponentLength;  // Adjust 5 for "e+XX" and the decimal point
+
+    if (precision < 0) precision = 0;  // Ensure precision is not negative
+
+    display.textContent = number.toExponential(precision);
 }
 
 const number_buttons = document.querySelectorAll(".number")
