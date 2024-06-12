@@ -144,12 +144,25 @@ equal_button.addEventListener("click", event => {
     }
 })
 
-// make backspace work since clear button is specifically for mousebutton down, maybe button has a . method and we mirror or just wirte  a new method
 document.addEventListener("keydown", event => {
     const keyValue = event.key
     let button = document.querySelector(`button[value="${keyValue}"]`);
     if (keyValue === "Enter") {
         button = document.querySelector(`button[value="="]`);
+    }
+    if (keyValue === "Backspace") {
+        if (right) {
+            right = right.slice(0, -1)
+        } else if (operation) {
+            operation = ""
+            removeActive()
+        } else {
+            left = left.slice(0,-1)
+        }
+        updateDisplay()
+        if (!left) {
+            display.textContent = "0000000000"
+        }
     }
     if (button) {
         button.click();
